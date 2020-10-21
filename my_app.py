@@ -18,12 +18,19 @@ def home():
 @app.route('/sliders')
 def sliders():
 	
-	valueA = int(request.args.get('valueA'))
-	valueB = int(request.args.get('valueB'))
+	valueA = request.args.get('valueA')
+	valueB = request.args.get('valueB')	
 	
 	if valueA and valueB:
-		value = valueA*valueB
+		value = int(valueA)*int(valueB)
 	else:
 		value = 0
 	
 	return render_template('sliders.html', value=value)
+
+@app.route('/bokehtest')
+def bokehtest():
+
+	value = 77
+	
+	return render_template('bokehtest.html', value = value)
