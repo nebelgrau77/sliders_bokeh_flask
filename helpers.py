@@ -1,16 +1,17 @@
+colors = {'white': '#ffffff', 'gray': '#888888', 'red': '#E8898E', 'yellow': '#ECBA91', 'green': '#9BC4AF'}
+
 def get_color(value):
 	if value > 10:
-		color = '#888888' # gray
+		color = colors['gray']
 	elif value > 8:
-		color = '#9BC4AF' # green
+		color = colors['green']
 	elif value > 4:
-		color = '#ECBA91' # yellow
+		color = colors['yellow']
 	else:
-		color = '#E8898E' # red
+		color = colors['red']
 		
 	return color
-
-
+	
 quality_weight = 0.7
 price_weight = 0.3	
 
