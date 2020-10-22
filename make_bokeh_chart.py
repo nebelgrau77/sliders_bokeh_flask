@@ -2,7 +2,7 @@ from bokeh.embed import components
 from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.models import ColumnDataSource, CategoricalColorMapper, Slider, HoverTool
-from bokeh.layouts import row, column
+from bokeh.layouts import row, column, gridplot
 from bokeh.io import curdoc
 
 from helpers import get_color, score_calc, colors
@@ -13,22 +13,27 @@ def simple_bokeh_chart(query):
 	score = score_calc(query)	
 	score_color = get_color(score)
 	
-	N = 5
-	
 	test = (3,3)
-	test_score = score_calc(test)
-	test_color = get_color(test_score)
 	
 	xr = (0,9)
 	yr = (0,4)
-
-	fig = figure(title=None, plot_width=420, plot_height=200,x_range = xr, y_range = yr, toolbar_location=None)	
 	
 	xs = [2,7]
-	ys = [2,2]
-	labels = ['{:.1f}'.format(score), '{:.1f}'.format(test_score)]
+	ys = [2,2]	
 	square_side = 4
 
+	fig = figure(title=None, plot_width=420, plot_height=200,x_range = xr, y_range = yr, toolbar_location=None)	
+
+	QS, PS = query
+	
+	slider_quality = Slider(start = 1, end = 10, value = QS, step = 1, title = 'Quality')
+	slider_price = Slider(start = 1, end = 10, value = PS, step = 1, title = 'Price')
+
+	test_score = score_calc((QS, PS))
+	test_color = get_color(test_score)
+	
+	labels = ['{:.1f}'.format(score), '{:.1f}'.format(QS*2)]
+	
 	source = ColumnDataSource(dict(x=xs, y=ys, label=labels))
 	
 	fig.rect(xs[0],ys[0],square_side,square_side,fill_color = score_color, fill_alpha = 0.8, line_color = colors['white'])	# real values
@@ -43,11 +48,21 @@ def simple_bokeh_chart(query):
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
 
-	slider = Slider(start = 1, end = 10, value = N, step = 1, title = 'Score')
 	
-	#layout = row(slider, fig)
+	# NOT WORKING YET
 	
-	layout = column(slider, fig)
+	def callback_quality(attr, old, new):
+		QS = slider_quality.value				
+	slider_quality.on_change('value', callback_quality)
+	
+	def callback_price(attr, old, new):
+		PS = slider_price.value				
+	slider_price.on_change('value', callback_price)
+	
+	# layout = gridplot([[slider_quality, fig], [slider_price, None]])
+	
+	sliders = column(slider_quality, slider_price)
+	layout = row(sliders, fig)
 	
 	curdoc().add_root(layout)
 	
@@ -56,6 +71,6 @@ def simple_bokeh_chart(query):
 	css_resources = INLINE.render_css()
 
 	#get the resources from the figure components
-	script, div = components(fig)
+	script, div = components(layout)
 
 	return script, div, js_resources, css_resources
