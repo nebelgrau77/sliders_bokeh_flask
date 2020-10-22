@@ -17,7 +17,7 @@ bootstrap = Bootstrap(app) # initialize Bootstrap
 db = SQLAlchemy(app) # initialize a connection to the database
 
 class Product(db.Model):
-	__tablename__ = products
+	__tablename__ = 'products'
 	index = db.Column(db.Integer(), unique=True, nullable=False, primary_key=True)
 	category = db.Column(db.String(40), unique = False, nullable=False) # e.g. TV, radio...
 	brand = db.Column(db.String(40), unique = False, nullable=False)

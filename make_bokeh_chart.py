@@ -15,19 +15,21 @@ def simple_bokeh_chart():
 
 	sample_text = ["text"]
 
-	fig = figure(title='Test', plot_width=500, plot_height=500,toolbar_location=None)	
+	xr = (0,9)
+	yr = (0,4)
 
-	xs = [1,1,3,3]
-	ys = [1,3,1,3]
-	labels = ['SW', 'NW', 'SE', 'NE']
+	fig = figure(title=None, plot_width=420, plot_height=200,x_range = xr, y_range = yr, toolbar_location=None)	
+	
+	xs = [2,7]
+	ys = [2,2]
+	labels = ['', '']
+	square_side = 4
 
 	source = ColumnDataSource(dict(x=xs, y=ys, label=labels))
-
 	
-	fig.rect(1,1, 2,2, fill_color = c_red, fill_alpha = 0.8, line_color = c_white)
-	fig.rect(1,3, 2,2, fill_color = c_yellow, fill_alpha = 0.8, line_color = c_white)
-	fig.rect(3,1, 2,2, fill_color = c_yellow, fill_alpha = 0.8, line_color = c_white)
-	fig.rect(3,3, 2,2, fill_color = c_green, fill_alpha = 0.8, line_color = c_white)
+	fig.rect(xs[0],ys[0],square_side,square_side,fill_color = c_red, fill_alpha = 0.8, line_color = c_white)	
+	fig.rect(xs[1],ys[1],square_side,square_side,fill_color = c_yellow, fill_alpha = 0.8, line_color = c_white)
+	
 	
 	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = source)
 
