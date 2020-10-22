@@ -3,20 +3,18 @@ from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.models import ColumnDataSource, CategoricalColorMapper
 from bokeh.models import HoverTool
+from helpers import get_color, score_calc
 
 def simple_bokeh_chart(query):
 	'''make a simple square chart'''
-
-	# chart defaults
-	c_red = '#E8898E' 
-	c_yellow = '#ECBA91'
-	c_green = '#9BC4AF'
-	c_white = '#ffffff'
-
-	weights = [0.7, 0.3]
-
-	score = query[0]*weights[0] + query[1]*weights[1]
-
+	
+	score = score_calc(query)	
+	score_color = get_color(score)
+	
+	test = (3,3)
+	test_score = score_calc(test)
+	test_color = get_color(test_score)
+	
 	xr = (0,9)
 	yr = (0,4)
 
@@ -24,14 +22,13 @@ def simple_bokeh_chart(query):
 	
 	xs = [2,7]
 	ys = [2,2]
-	labels = ['{:.1f}'.format(score), '{:.1f}'.format(score)]
+	labels = ['{:.1f}'.format(score), '{:.1f}'.format(test_score)]
 	square_side = 4
 
 	source = ColumnDataSource(dict(x=xs, y=ys, label=labels))
 	
-	fig.rect(xs[0],ys[0],square_side,square_side,fill_color = c_red, fill_alpha = 0.8, line_color = c_white)	
-	fig.rect(xs[1],ys[1],square_side,square_side,fill_color = c_yellow, fill_alpha = 0.8, line_color = c_white)
-	
+	fig.rect(xs[0],ys[0],square_side,square_side,fill_color = score_color, fill_alpha = 0.8, line_color = c_white)	# real values
+	fig.rect(xs[1],ys[1],square_side,square_side,fill_color = test_color, fill_alpha = 0.8, line_color = c_white)	# test values
 	
 	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = source)
 
