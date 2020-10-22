@@ -10,37 +10,45 @@ from helpers import get_color, score_calc, colors
 def simple_bokeh_chart(query):
 	'''make a simple square chart'''
 	
-	score = score_calc(query)	
-	score_color = get_color(score)
+	actual_score = score_calc(query)	
+	score_color = get_color(actual_score)
 	
 	test = (3,3)
 	
-	xr = (0,9)
-	yr = (0,4)
+	xrange = (0,9)
+	yrange = (0,4)
 	
-	xs = [2,7]
-	ys = [2,2]	
+	
+	# SEEMS TO REQUIRE BOKEH SERVER INSTEAD TO WORK WITH CALLBACKS
+	
+	
+	actual_coords = ([2],[2])
+	actual_label = ['{:.1f}'.format(actual_score)]
+	
+	actual_source = ColumnDataSource(data = dict(x=actual_coords[0], y=actual_coords[1], label = actual_label))
+		
 	square_side = 4
 
-	fig = figure(title=None, plot_width=420, plot_height=200,x_range = xr, y_range = yr, toolbar_location=None)	
+	fig = figure(title=None, plot_width=420, plot_height=200,x_range = xrange, y_range = yrange, toolbar_location=None)	
 
 	QS, PS = query
 	
-	slider_quality = Slider(start = 1, end = 10, value = QS, step = 1, title = 'Quality')
-	slider_price = Slider(start = 1, end = 10, value = PS, step = 1, title = 'Price')
+	quality_score = Slider(start = 1, end = 10, value = QS, step = 1, title = 'Quality')
+	price_score = Slider(start = 1, end = 10, value = PS, step = 1, title = 'Price')
 
 	test_score = score_calc((QS, PS))
 	test_color = get_color(test_score)
 	
-	labels = ['{:.1f}'.format(score), '{:.1f}'.format(QS*2)]
+	test_coords = ([7],[2])
+	test_label = ['{:.1f}'.format(test_score)]
+	test_source = ColumnDataSource(data = dict(x=test_coords[0], y=test_coords[1], label = ['{:.1f}'.format(test_score)]))
 	
-	source = ColumnDataSource(dict(x=xs, y=ys, label=labels))
+	fig.rect(actual_coords[0],actual_coords[1],square_side,square_side,fill_color = score_color, fill_alpha = 0.8, line_color = colors['white'])	# real values
+	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = actual_source)
 	
-	fig.rect(xs[0],ys[0],square_side,square_side,fill_color = score_color, fill_alpha = 0.8, line_color = colors['white'])	# real values
-	fig.rect(xs[1],ys[1],square_side,square_side,fill_color = test_color, fill_alpha = 0.8, line_color = colors['white'])	# test values
+	fig.rect(test_coords[0],test_coords[1],square_side,square_side,fill_color = test_color, fill_alpha = 0.8, line_color = colors['white'])	# test values
+	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = test_source)
 	
-	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = source)
-
 	fig.outline_line_color = None
 	fig.grid.grid_line_color = None
 	fig.axis.axis_line_color = None
@@ -49,22 +57,25 @@ def simple_bokeh_chart(query):
 	fig.axis.major_label_text_color = None
 
 	
-	# NOT WORKING YET
+	def update(attrname, old, new):
+		
+		# get the current slider values
+		
+		qs = quality_score.value
+		ps = price_score.value
+		
+		# update the test score calculation
+		
+		testscore = score_calc((qs, ps))
+		test_source.data = dict(x=test_coords[0], y=test_coords[1], label = '{:.1f}'.format(testscore))			
 	
-	def callback_quality(attr, old, new):
-		QS = slider_quality.value				
-	slider_quality.on_change('value', callback_quality)
+	for param in [quality_score, price_score]:
+		param.on_change('value', update)
 	
-	def callback_price(attr, old, new):
-		PS = slider_price.value				
-	slider_price.on_change('value', callback_price)
-	
-	# layout = gridplot([[slider_quality, fig], [slider_price, None]])
-	
-	sliders = column(slider_quality, slider_price)
+	sliders = column(quality_score, price_score)
 	layout = row(sliders, fig)
 	
-	curdoc().add_root(layout)
+	curdoc().add_root(layout) # not sure if that's even necessary
 	
 	#grab the static resources
 	js_resources = INLINE.render_js()
