@@ -18,8 +18,11 @@ Start with a simple example: two "products", eg. brand A TV and brand B TV.
 
 So there will be a slider to choose between "brand A" and "brand B".\
 In the database only the product name and the points for various parameters will be stored: the calculation of the overall score is dynamic, on request.\
- Therefore the query will return two point values, that will feed the chart (actually a number in a square).\
+Therefore the query will return two point values, that will feed the chart (actually a number in a square).\
 These values will also be the starting values for the sliders.\
-The second square will have the value calculated from the sliders. 
+Color of the box depends on the value (eg. red below 4, yellow below 7, otherwise green).
 
-_Advanced feature_: color of the box depends on the value (eg. red below 4, yellow below 7, otherwise green).
+_The second square will have the value calculated from the sliders._The
+
+This all works so far, except for the value calculated from the sliders. It seems that the bokeh server is needed for the callbacks to work correctly.
+
