@@ -4,7 +4,7 @@ from bokeh.resources import INLINE
 from bokeh.models import ColumnDataSource, CategoricalColorMapper
 from bokeh.models import HoverTool
 
-def simple_bokeh_chart():
+def simple_bokeh_chart(query):
 	'''make a simple square chart'''
 
 	# chart defaults
@@ -13,7 +13,9 @@ def simple_bokeh_chart():
 	c_green = '#9BC4AF'
 	c_white = '#ffffff'
 
-	sample_text = ["text"]
+	weights = [0.7, 0.3]
+
+	score = query[0]*weights[0] + query[1]*weights[1]
 
 	xr = (0,9)
 	yr = (0,4)
@@ -22,7 +24,7 @@ def simple_bokeh_chart():
 	
 	xs = [2,7]
 	ys = [2,2]
-	labels = ['', '']
+	labels = ['{:.1f}'.format(score), '{:.1f}'.format(score)]
 	square_side = 4
 
 	source = ColumnDataSource(dict(x=xs, y=ys, label=labels))
