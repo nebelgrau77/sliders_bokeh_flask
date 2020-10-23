@@ -58,7 +58,9 @@ def sliders():
 @app.route('/bokehtest')
 def bokehtest():
 	
-	testquery = db.session.query(Product.quality_score, Product.price_score).filter(Product.index==1).one()
+	#testquery = db.session.query(Product.quality_score, Product.price_score).filter(Product.index==1).one()
+
+	testquery = (6,7,4)
 
 	script, div, js_resources, css_resources = simple_bokeh_chart(testquery)
 

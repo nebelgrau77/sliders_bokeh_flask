@@ -26,7 +26,7 @@ def simple_bokeh_chart(query):
 	
 	side = 4
 
-	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], price = [query[0]], quality = [query[1]], color = [color], label = [label], side = [side]))
+	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], price = [query[0]], quality = [query[1]], packaging = [query[2]], color = [color], label = [label], side = [side]))
 
 	fig = figure(title=None, plot_width=200, plot_height=200,x_range = x_range, y_range = y_range, toolbar_location=None)	
 
@@ -40,65 +40,57 @@ def simple_bokeh_chart(query):
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
 	
-	jscode1 = """
+	
+	jscode_master = """
         var data = source.data;
-        var v = cb_obj.value	
+       
+		var v = cb_obj.value	
+
 		var price = data['price']
-		var label = data['label']
-		var score = price * 0.3 + v * 0.7
-
-		label[0] = score.toFixed(1)
-
-		var color = data['color']
-
-		if (score < 4) {
-			color[0]  = '#E8898E'
-		}
-		else if (score < 8) {
-			color[0]  = '#ECBA91'
-		}
-		else {
-			color[0]  = '#9BC4AF'
-		}
-
-		source.change.emit();
-    """
-
-	jscode2 = """
-        var data = source.data;
-        var v = cb_obj.value	
 		var quality = data['quality']
+		var packaging = data['packaging']
 		var label = data['label']
-		var score = v * 0.3 + quality * 0.7
+		var color = data['color']
+
+		%s[0] = v
+
+		var score =  v * %s + %s * %s + %s * %s
 
 		label[0] = score.toFixed(1)
 
-		var color = data['color']
-
 		if (score < 4) {
-			color[0]  = '#E8898E'
+			color[0]  = '%s'
 		}
 		else if (score < 8) {
-			color[0]  = '#ECBA91'
+			color[0]  = '%s'
 		}
 		else {
-			color[0]  = '#9BC4AF'
+			color[0]  = '%s'
 		}
 
 		source.change.emit();
     """
 
+	jscode1 = jscode_master % ('price', 0.4, 'quality', 0.5, 'packaging', 0.1, colors['red'], colors['yellow'], colors['green']) # get price
 
-	quality_changer = CustomJS(args = dict(source = datasource), code = jscode1)	
+	jscode2 = jscode_master % ('quality', 0.5, 'price', 0.4, 'packaging', 0.1, colors['red'], colors['yellow'], colors['green']) # get quality 
+
+	jscode3 = jscode_master % ('packaging', 0.1, 'price', 0.4, 'quality', 0.5, colors['red'], colors['yellow'], colors['green']) # get packaging
+
+	
+	price_changer = CustomJS(args = dict(source = datasource), code = jscode1)	
+	price_score = Slider(start = 1, end = 10, value = 5, step = 1, title = 'Price')
+	price_score.js_on_change('value', price_changer)
+
+	quality_changer = CustomJS(args = dict(source = datasource), code = jscode2)	
 	quality_score = Slider(start = 1, end = 10, value = 5, step = 1, title = 'Quality')
 	quality_score.js_on_change('value', quality_changer)
 
-	price_changer = CustomJS(args = dict(source = datasource), code = jscode2)	
-	price_score = Slider(start = 1, end = 10, value = 5, step = 1, title = 'Price')
-	price_score.js_on_change('value', price_changer)
-	
-	
-	sliders = column(quality_score, price_score)
+	packaging_changer = CustomJS(args = dict(source = datasource), code = jscode3)	
+	packaging_score = Slider(start = 1, end = 10, value = 5, step = 1, title = 'Packaging')
+	packaging_score.js_on_change('value', packaging_changer)
+		
+	sliders = column(price_score, quality_score, packaging_score)
 	layout = row(sliders, fig)
 	
 	
