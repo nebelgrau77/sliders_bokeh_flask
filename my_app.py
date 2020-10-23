@@ -3,7 +3,18 @@ import os
 from flask import Flask, render_template, request, redirect
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+
+from bokeh.embed import server_session
+from bokeh.client import pull_session
+
 from make_bokeh_chart import simple_bokeh_chart
+
+from bokehtest import bokeh_test
+from scatter import make_scatter
+
+
+
+
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -26,8 +37,6 @@ class Product(db.Model):
 
 	def __repr__(self):
 		return "<Index: {:05d}, Category: {}, Brand: {}, Quality score: {}, Price score: {}".format(self.index, self.category, self.brand, self.quality_score,self.price_score)
-
-
 
 @app.route('/')
 def home():
@@ -55,5 +64,21 @@ def bokehtest():
 
 	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=testquery)
 	
+@app.route('/bokehserver')
+def bkapp():
 	
+	testquery = (2,6)
+
+	script, div, js_resources, css_resources = bokeh_test()
+
+	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=testquery)
+
+
+@app.route('/scatter')
+def test_scatter():
 	
+	val = 5
+
+	script, div, js_resources, css_resources = make_scatter(val)
+
+	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=val)
