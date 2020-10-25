@@ -1,4 +1,6 @@
 import os
+import sqlite3 as sqlite
+import pandas as pd
 
 from flask import Flask, render_template, request, redirect
 from flask_bootstrap import Bootstrap
@@ -12,8 +14,7 @@ from make_bokeh_chart import simple_bokeh_chart
 from bokehtest import bokeh_test
 from scatter import make_scatter
 
-
-
+from dataframe import points, dataframe, assign_points, assign_cyl_points
 
 
 # define paths to project and database
@@ -84,3 +85,31 @@ def test_scatter():
 	script, div, js_resources, css_resources = make_scatter(val)
 
 	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=val)
+
+cars_database = 'cars.db'
+
+data = dataframe(cars_database, 'cars')
+data = assign_points(data, 'horsepower', points['horsepower'], reverse=True)
+data = assign_points(data, 'acceleration', points['acceleration'])
+data = assign_points(data, 'weight_kg', points['weight_kg'])
+data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
+data = assign_cyl_points(data)
+
+model_years = list(df['model_year'].unique())
+origins = list(df['origin'].unique())
+
+
+@app.route('/mpg_sliders')
+def mpgsliders():
+
+	# get mean values of the points for modelyear/origin chosen by the user: ['horsepower','accel', 'weight_kg', 'liters_per_100km', 'cylinders']
+
+	year = request.args.get('year')
+	origin = request.args.get('origin')
+
+	query = data.loc[(data['model_year'] == year) & (data['origin'] == origin), 
+					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points', 'cylinders_points']].mean()
+	
+	query = list(query)
+
+	return render_template('bokeh_test.html', years = model_years, origins = origins, query = query)
