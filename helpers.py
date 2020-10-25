@@ -19,4 +19,6 @@ def score_calc(points):
 	score = points[0]*quality_weight + points[1]*price_weight
 	return score
 	
+
+
 	

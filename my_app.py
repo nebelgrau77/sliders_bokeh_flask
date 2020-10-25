@@ -14,7 +14,7 @@ from make_bokeh_chart import simple_bokeh_chart
 from bokehtest import bokeh_test
 from scatter import make_scatter
 
-from dataframe import points, dataframe, assign_points, assign_cyl_points
+from dataframes import points, dataframe, assign_points, assign_cyl_points
 
 
 # define paths to project and database
@@ -86,7 +86,7 @@ def test_scatter():
 
 	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=val)
 
-cars_database = 'cars.db'
+cars_database = os.path.join(project_dir,'data/cars.db')
 
 data = dataframe(cars_database, 'cars')
 data = assign_points(data, 'horsepower', points['horsepower'], reverse=True)
@@ -95,9 +95,8 @@ data = assign_points(data, 'weight_kg', points['weight_kg'])
 data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
 data = assign_cyl_points(data)
 
-model_years = list(df['model_year'].unique())
-origins = list(df['origin'].unique())
-
+model_years = list(data['model_year'].unique())
+origins = list(data['origin'].unique())
 
 @app.route('/mpg_sliders')
 def mpgsliders():
@@ -111,5 +110,7 @@ def mpgsliders():
 					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points', 'cylinders_points']].mean()
 	
 	query = list(query)
+
+	# script, div, js_resources, css_resources = make_bokeh_chart - needs to be modified
 
 	return render_template('bokeh_sliders.html', years = model_years, origins = origins, query = query)

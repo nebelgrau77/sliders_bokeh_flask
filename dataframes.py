@@ -1,8 +1,10 @@
-points = {'accel': {14.7:2, 13.8:3, 13:4, 11.3:5}, # the lower the better
-        'mpg': {9.4:2, 8.1:3, 7.3:4, 6.4:5}, # the lower the better  }
-        'weight': {1170: 2, 1010: 3, 950: 4, 870: 5}, # the lower the better
-        'horsepower': {100: 2, 125: 3, 150: 4, 180: 5} # the HIGHER the better, reverse = True
-        }
+import sqlite3 as sqlite
+import pandas as pd
+
+points = {'acceleration': {14.7:2, 13.8:3, 13:4, 11.3:5},
+        'liters_per_100km': {9.4:2, 8.1:3, 7.3:4, 6.4:5},
+        'weight_kg': {1170: 2, 1010: 3, 950: 4, 870: 5}, 
+        'horsepower': {100: 2, 125: 3, 150: 4, 180: 5}} #the higher the better, reverse = True
 
 def dataframe(dbfile, tablename):
     conn = sqlite.connect(dbfile)
