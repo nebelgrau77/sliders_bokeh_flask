@@ -112,4 +112,4 @@ def mpgsliders():
 	
 	query = list(query)
 
-	return render_template('bokeh_test.html', years = model_years, origins = origins, query = query)
+	return render_template('bokeh_sliders.html', years = model_years, origins = origins, query = query)
