@@ -13,6 +13,7 @@ from make_bokeh_chart import simple_bokeh_chart
 
 from bokehtest import bokeh_test
 from scatter import make_scatter
+from bokeh_sliders import sliders
 
 from dataframes import points, dataframe, assign_points, assign_cyl_points
 
@@ -111,6 +112,6 @@ def mpgsliders():
 	
 	query = list(query)
 
-	# script, div, js_resources, css_resources = make_bokeh_chart - needs to be modified
+	# script, div, js_resources, css_resources = sliders(query) - needs to be modified
 
 	return render_template('bokeh_sliders.html', years = model_years, origins = origins, query = query)
