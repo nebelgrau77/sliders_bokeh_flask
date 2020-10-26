@@ -13,7 +13,8 @@ from make_bokeh_chart import simple_bokeh_chart
 
 from bokehtest import bokeh_test
 from scatter import make_scatter
-from bokeh_sliders import sliders
+from bokeh_sliders import sliders_chart
+
 
 from dataframes import points, dataframe, assign_points, assign_cyl_points
 
@@ -106,12 +107,17 @@ def mpgsliders():
 
 	year = request.args.get('year')
 	origin = request.args.get('origin')
-
-	query = data.loc[(data['model_year'] == year) & (data['origin'] == origin), 
-					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points', 'cylinders_points']].mean()
+	
+	if year and origin:
+		query = data.loc[(data['model_year'] == year) & (data['origin'] == origin), 
+					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points']].mean()
+	else:
+		query = data.loc[(data['model_year'] == 1977) & (data['origin'] == 'EUROPE'), 
+					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points']].mean()
 	
 	query = list(query)
+	
+	
+	script, div, js_resources, css_resources = sliders_chart(query) # needs to be modified
 
-	# script, div, js_resources, css_resources = sliders(query) - needs to be modified
-
-	return render_template('bokeh_sliders.html', years = model_years, origins = origins, query = query)
+	return render_template('bokeh_sliders.html', plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources, years = model_years, origins = origins, query = query)

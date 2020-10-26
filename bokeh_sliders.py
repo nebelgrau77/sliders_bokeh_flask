@@ -21,7 +21,7 @@ def sliders_chart(query):
 
 	side = 4
 
-	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], price = [query[0]], quality = [query[1]], packaging = [query[2]], color = [color], label = [label], side = [side]))
+	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], hp = [query[0]], accel = [query[1]], weight = [query[2]], mpg = [query[3]], color = [color], label = [label], side = [side]))
 
 	fig = figure(title=None, plot_width=200, plot_height=200,x_range = x_range, y_range = y_range, toolbar_location=None)
 
@@ -35,24 +35,20 @@ def sliders_chart(query):
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
 
+	weights = {'hp': 0.15, 'accel': 0.3, 'weight': 0.1, 'mpg': 0.45}
 
 	jscode_master = """
         var data = source.data;
-
 		var v = cb_obj.value
-
-		var price = data['price']
-		var quality = data['quality']
-		var packaging = data['packaging']
+		var hp = data['hp']
+		var accel = data['accel']
+		var weight = data['weight']
+		var mpg = data['mpg']
 		var label = data['label']
 		var color = data['color']
-
 		%s[0] = v
-
-		var score =  v * %s + %s * %s + %s * %s
-
+		var score =  v * %s + %s * %s + %s * %s + %s * %s
 		label[0] = score.toFixed(1)
-
 		if (score < 4) {
 			color[0]  = '%s'
 		}
@@ -62,35 +58,38 @@ def sliders_chart(query):
 		else {
 			color[0]  = '%s'
 		}
-
 		source.change.emit();
     """
+	
+	jscode1 = js_formatter(jscode_master, 'hp', weights)
+	jscode2 = js_formatter(jscode_master, 'accel', weights)
+	jscode3 = js_formatter(jscode_master, 'weight', weights)
+	jscode4 = js_formatter(jscode_master, 'mpg', weights)
+		
+	# the starting values should be those of the query
+	
+	slider_hp = CustomJS(args = dict(source = datasource), code = jscode1)
+	score_hp = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Horsepower')
+	score_hp.js_on_change('value', slider_hp)	
+	
+	slider_accel = CustomJS(args = dict(source = datasource), code = jscode2)
+	score_accel = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Acceleration')
+	score_accel.js_on_change('value', slider_accel)
 
-	jscode1 = jscode_master % ('price', 0.4, 'quality', 0.5, 'packaging', 0.1, colors['red'], colors['yellow'], colors['green']) # get price
+	slider_weight = CustomJS(args = dict(source = datasource), code = jscode3)
+	score_weight = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Weight')
+	score_weight.js_on_change('value', slider_weight)
 
-	jscode2 = jscode_master % ('quality', 0.5, 'price', 0.4, 'packaging', 0.1, colors['red'], colors['yellow'], colors['green']) # get quality
-
-	jscode3 = jscode_master % ('packaging', 0.1, 'price', 0.4, 'quality', 0.5, colors['red'], colors['yellow'], colors['green']) # get packaging
-
-
-	price_changer = CustomJS(args = dict(source = datasource), code = jscode1)
-	price_score = Slider(start = 1, end = 10, value = 5, step = 1, title = 'Price')
-	price_score.js_on_change('value', price_changer)
-
-	quality_changer = CustomJS(args = dict(source = datasource), code = jscode2)
-	quality_score = Slider(start = 1, end = 10, value = 5, step = 1, title = 'Quality')
-	quality_score.js_on_change('value', quality_changer)
-
-	packaging_changer = CustomJS(args = dict(source = datasource), code = jscode3)
-	packaging_score = Slider(start = 1, end = 10, value = 5, step = 1, title = 'Packaging')
-	packaging_score.js_on_change('value', packaging_changer)
-
-	sliders = column(price_score, quality_score, packaging_score)
+	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode4)
+	score_mpg = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Consumption')
+	score_mpg.js_on_change('value', slider_mpg)
+	
+	sliders = column(score_mpg, score_accel, score_hp, score_weight)
 	layout = row(sliders, fig)
 
 
 
-	#curdoc().add_root(layout) # not sure if that's even necessary
+	#curdoc().add_root(layout) # not sure if that's even necessary	
 
 	#grab the static resources
 	js_resources = INLINE.render_js()
