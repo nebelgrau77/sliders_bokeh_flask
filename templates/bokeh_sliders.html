@@ -18,31 +18,31 @@
         <div class = "page-header">
             <h3>{{origin}} {{year}}</h3>
         </div>
-
+   
     <div class="row">
-        <form action='/mpg_sliders	'>
-            <select name="year">
-                {% for y in years %}
-                    <option value="{{ y }}">{{ y }}</option>
-                {% endfor %}
-            </select>
-        
-            <select name="origin">
-                {% for o in origins %}
-                    <option value="{{ o }}">{{ o }}</option>
-                {% endfor %}
-            </select>
-    
-            <input type="submit">
-    
-        </form>
-    </div>
-
-    <div class="row">
-
         <div class="col-lg-6">
             {{ plot_div|indent(4)|safe }}
         </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-lg-6">
+            <form action='/mpg_sliders	'>
+                <select name="year">
+                    {% for y in years %}
+                        <option value="{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>        
+                <select name="origin">
+                    {% for o in origins %}
+                        <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                </select>    
+                <input type="submit">    
+            </form>
+        </div>        
     </div>
 
 </div>

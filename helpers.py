@@ -10,8 +10,7 @@ def get_color(value):
 	elif value > 4:
 		color = colors['yellow']
 	else:
-		color = colors['red']
-		
+		color = colors['red']		
 	return color
 
 def score_calc(points):
@@ -20,7 +19,7 @@ def score_calc(points):
 	
 def score_calc_sliders(points, weights):
 	weights = list(weights.values())
-	score = sum([points[i]*weights[i] for i in range(3)])
+	score = sum([point*weight for point,weight in zip(points, weights)])
 	return score
 
 def js_formatter(js_master, value, weights):
@@ -28,5 +27,4 @@ def js_formatter(js_master, value, weights):
 	values = list(weights.keys())
 	values.remove(value)
 	js_string = js_master % (value, weights[value], values[0], weights[values[0]], values[1], weights[values[1]], values[2], weights[values[2]], colors['red'], colors['yellow'], colors['green'])
-	
 	return js_string

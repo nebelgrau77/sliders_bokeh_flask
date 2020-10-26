@@ -23,7 +23,7 @@ def sliders_chart(query):
 
 	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], hp = [query[0]], accel = [query[1]], weight = [query[2]], mpg = [query[3]], color = [color], label = [label], side = [side]))
 
-	fig = figure(title=None, plot_width=200, plot_height=200,x_range = x_range, y_range = y_range, toolbar_location=None)
+	fig = figure(title=None, plot_width=240, plot_height=240,x_range = x_range, y_range = y_range, toolbar_location=None)
 
 	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)
 	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = datasource)
@@ -54,10 +54,10 @@ def sliders_chart(query):
 		
 		label[0] = score.toFixed(1)
 		
-		if (score < 4) {
+		if (score < 3) {
 			color[0]  = '%s'
 		}
-		else if (score < 8) {
+		else if (score < 4) {
 			color[0]  = '%s'
 		}
 		else {
