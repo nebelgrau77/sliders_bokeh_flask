@@ -26,7 +26,7 @@ def sliders_chart(query):
 	fig = figure(title=None, plot_width=240, plot_height=240,x_range = x_range, y_range = y_range, toolbar_location=None)
 
 	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)
-	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = datasource)
+	fig.text(x='x', y='y', text='label', text_font_style="bold", text_font_size = "48px", text_align='center', text_baseline="middle", source = datasource)
 
 	fig.outline_line_color = None
 	fig.grid.grid_line_color = None
