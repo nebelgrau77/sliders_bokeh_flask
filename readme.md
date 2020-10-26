@@ -17,5 +17,10 @@ Start with a simple example: two "products", eg. brand A TV and brand B TV.
 Sliders work with JS callback, but it's very hacky. It loses all the modular approach where the weights, colors etc. can be quickly updated. 
 In order to restore this, an idea is to use one JS code block with formatting, restoring at least partially the modular idea. 
 
-Not sure how this can work with other elements, e.g. query selected from a menu, etc.
 
+TO DO: something is crashing when trying to get a new query, getting NaNs from the dataframe. It may be necessary to redo the df every time.
+
+THIS IS NOT THE PROBLEM, THIS IS:
+
+https://stackoverflow.com/questions/40659212/futurewarning-elementwise-comparison-failed-returning-scalar-but-in-the-futur
+	

@@ -5,12 +5,12 @@ from bokeh.models import ColumnDataSource, CategoricalColorMapper, Slider, Hover
 from bokeh.layouts import row, column, gridplot
 from bokeh.io import curdoc
 
-from helpers import get_color, score_calc, colors, js_formatter
+from helpers import get_color, score_calc, score_calc_sliders, colors, js_formatter, weights
 
 def sliders_chart(query):
 	'''make a simple square chart'''
 
-	score = score_calc(query)
+	score = score_calc_sliders(query, weights)
 
 	x_range = (0,4)
 	y_range = (0,4)
@@ -25,7 +25,7 @@ def sliders_chart(query):
 
 	fig = figure(title=None, plot_width=200, plot_height=200,x_range = x_range, y_range = y_range, toolbar_location=None)
 
-	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)	# test values
+	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)
 	fig.text(x='x', y='y', text='label', text_font_style="bold", text_align='left', text_baseline="middle", source = datasource)
 
 	fig.outline_line_color = None
@@ -34,21 +34,26 @@ def sliders_chart(query):
 	fig.axis.major_tick_line_color = None
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
-
-	weights = {'hp': 0.15, 'accel': 0.3, 'weight': 0.1, 'mpg': 0.45}
+	
 
 	jscode_master = """
         var data = source.data;
 		var v = cb_obj.value
+		
 		var hp = data['hp']
 		var accel = data['accel']
 		var weight = data['weight']
 		var mpg = data['mpg']
+		
 		var label = data['label']
 		var color = data['color']
+		
 		%s[0] = v
+		
 		var score =  v * %s + %s * %s + %s * %s + %s * %s
+		
 		label[0] = score.toFixed(1)
+		
 		if (score < 4) {
 			color[0]  = '%s'
 		}
@@ -58,6 +63,7 @@ def sliders_chart(query):
 		else {
 			color[0]  = '%s'
 		}
+		
 		source.change.emit();
     """
 	
@@ -69,25 +75,23 @@ def sliders_chart(query):
 	# the starting values should be those of the query
 	
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode1)
-	score_hp = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Horsepower')
+	score_hp = Slider(start = 1, end = 5, value = round(query[0],1), step = .1, title = 'Horsepower')
 	score_hp.js_on_change('value', slider_hp)	
 	
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode2)
-	score_accel = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Acceleration')
+	score_accel = Slider(start = 1, end = 5, value = round(query[1],1), step = .1, title = 'Acceleration')
 	score_accel.js_on_change('value', slider_accel)
 
 	slider_weight = CustomJS(args = dict(source = datasource), code = jscode3)
-	score_weight = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Weight')
+	score_weight = Slider(start = 1, end = 5, value = round(query[2],1), step = .1, title = 'Weight')
 	score_weight.js_on_change('value', slider_weight)
 
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode4)
-	score_mpg = Slider(start = 1, end = 5, value = 3, step = .1, title = 'Consumption')
+	score_mpg = Slider(start = 1, end = 5, value = round(query[3],1), step = .1, title = 'Consumption')
 	score_mpg.js_on_change('value', slider_mpg)
 	
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
 	layout = row(sliders, fig)
-
-
 
 	#curdoc().add_root(layout) # not sure if that's even necessary	
 

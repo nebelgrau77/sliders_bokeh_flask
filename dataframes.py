@@ -29,3 +29,13 @@ def assign_cyl_points(df):
     for c, p in zip([6,8,4], [5,4,3]):
         df.loc[df['cylinders'] == c, 'cylinders_points'] = p
     return df
+
+	
+def dataframe_points(dbfile, tablename, points):	
+	data = dataframe(dbfile, tablename)
+	data = assign_points(data, 'horsepower', points['horsepower'], reverse=True)
+	data = assign_points(data, 'acceleration', points['acceleration'])
+	data = assign_points(data, 'weight_kg', points['weight_kg'])
+	data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
+	data = assign_cyl_points(data)
+	return data
