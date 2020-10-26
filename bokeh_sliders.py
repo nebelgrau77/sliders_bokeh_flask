@@ -67,26 +67,26 @@ def sliders_chart(query):
 		source.change.emit();
     """
 	
-	jscode1 = js_formatter(jscode_master, 'hp', weights)
-	jscode2 = js_formatter(jscode_master, 'accel', weights)
-	jscode3 = js_formatter(jscode_master, 'weight', weights)
-	jscode4 = js_formatter(jscode_master, 'mpg', weights)
+	jscode0 = js_formatter(jscode_master, 'hp', weights)
+	jscode1 = js_formatter(jscode_master, 'accel', weights)
+	jscode2 = js_formatter(jscode_master, 'weight', weights)
+	jscode3 = js_formatter(jscode_master, 'mpg', weights)
 		
 	# the starting values should be those of the query
 	
-	slider_hp = CustomJS(args = dict(source = datasource), code = jscode1)
+	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
 	score_hp = Slider(start = 1, end = 5, value = round(query[0],1), step = .1, title = 'Horsepower')
 	score_hp.js_on_change('value', slider_hp)	
 	
-	slider_accel = CustomJS(args = dict(source = datasource), code = jscode2)
+	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
 	score_accel = Slider(start = 1, end = 5, value = round(query[1],1), step = .1, title = 'Acceleration')
 	score_accel.js_on_change('value', slider_accel)
 
-	slider_weight = CustomJS(args = dict(source = datasource), code = jscode3)
+	slider_weight = CustomJS(args = dict(source = datasource), code = jscode2)
 	score_weight = Slider(start = 1, end = 5, value = round(query[2],1), step = .1, title = 'Weight')
 	score_weight.js_on_change('value', slider_weight)
 
-	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode4)
+	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
 	score_mpg = Slider(start = 1, end = 5, value = round(query[3],1), step = .1, title = 'Consumption')
 	score_mpg.js_on_change('value', slider_mpg)
 	

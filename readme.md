@@ -18,9 +18,6 @@ Sliders work with JS callback, but it's very hacky. It loses all the modular app
 In order to restore this, an idea is to use one JS code block with formatting, restoring at least partially the modular idea. 
 
 
-TO DO: something is crashing when trying to get a new query, getting NaNs from the dataframe. It may be necessary to redo the df every time.
+TO DO: There's still some calculation problem, with values below 1 shown.
 
-THIS IS NOT THE PROBLEM, THIS IS:
-
-https://stackoverflow.com/questions/40659212/futurewarning-elementwise-comparison-failed-returning-scalar-but-in-the-futur
 	

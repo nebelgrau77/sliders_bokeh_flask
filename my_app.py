@@ -90,21 +90,21 @@ def test_scatter():
 
 cars_database = os.path.join(project_dir,'data/cars.db')
 
-'''
+
 data = dataframe(cars_database, 'cars')
 data = assign_points(data, 'horsepower', points['horsepower'], reverse=True)
 data = assign_points(data, 'acceleration', points['acceleration'])
 data = assign_points(data, 'weight_kg', points['weight_kg'])
 data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
 data = assign_cyl_points(data)
-'''
+
 
 
 
 @app.route('/mpg_sliders')
 def mpgsliders():
 
-	data = dataframe_points(cars_database, 'cars', points)
+	#data = dataframe_points(cars_database, 'cars', points)
 	model_years = list(data['model_year'].unique())
 	origins = list(data['origin'].unique())
 
@@ -113,10 +113,11 @@ def mpgsliders():
 	year = request.args.get('year')
 	origin = request.args.get('origin')
 	
-	print(year, origin)
+	print('year: ', year, type(year))
+	print('origin: ', origin, type(origin))
 	
 	if year and origin:
-		year, origin = year, origin
+		year, origin = int(year), origin
 	else:
 		year, origin = 1977, 'EUROPE'
 	
@@ -130,4 +131,13 @@ def mpgsliders():
 		
 	script, div, js_resources, css_resources = sliders_chart(query) # needs to be modified
 
-	return render_template('bokeh_sliders.html', plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources, years = model_years, origins = origins, query = query)
+	return render_template('bokeh_sliders.html', 
+							plot_script = script,
+							plot_div = div,
+							js_resources = js_resources,
+							css_resources=css_resources,
+							years = model_years,
+							origins = origins,
+							query = query,
+							origin = origin,
+							year = year)
