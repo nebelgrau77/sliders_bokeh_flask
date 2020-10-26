@@ -5,7 +5,7 @@ from bokeh.models import ColumnDataSource, CategoricalColorMapper, Slider, Hover
 from bokeh.layouts import row, column, gridplot
 from bokeh.io import curdoc
 
-from helpers import get_color, score_calc, colors
+from helpers import get_color, score_calc, colors, js_formatter
 
 def sliders_chart(query):
 	'''make a simple square chart'''

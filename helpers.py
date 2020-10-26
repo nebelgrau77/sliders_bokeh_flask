@@ -19,6 +19,14 @@ def score_calc(points):
 	score = points[0]*quality_weight + points[1]*price_weight
 	return score
 	
+def js_formatter(js_string, value, weights):
+	'''formats a JS code string with appropriate parameters'''
+	all_values = list(weights.keys())
+	values = all_values.pop(value)
+	js_string = js_string.format('''value, values[0]*weights(value) + values[1]*weights(value) + ...''')
+	return js_string
+
+
 
 
 	
