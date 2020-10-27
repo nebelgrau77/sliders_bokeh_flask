@@ -12,10 +12,10 @@ def sliders_chart(query):
 
 	score = score_calc_sliders(query, weights)
 
-	x_range = (0,4)
-	y_range = (0,4)
+	x_range = (0,9)
+	y_range = (0,5)
 
-	coords = ([2],[2])
+	coords = ([2],[3])
 	label = '{:.1f}'.format(score)
 	color = get_color(score)
 
@@ -23,10 +23,15 @@ def sliders_chart(query):
 
 	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], hp = [query[0]], accel = [query[1]], weight = [query[2]], mpg = [query[3]], color = [color], label = [label], side = [side]))
 
-	fig = figure(title=None, plot_width=240, plot_height=240,x_range = x_range, y_range = y_range, toolbar_location=None)
+	fig = figure(title=None, plot_width=480, plot_height=280,x_range = x_range, y_range = y_range, toolbar_location=None)
 
 	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)
 	fig.text(x='x', y='y', text='label', text_font_style="bold", text_font_size = "48px", text_align='center', text_baseline="middle", source = datasource)
+	fig.text(x=0, y=1, text=['simulation'], text_font_style="bold", text_font_size = "20px", text_align='left', text_baseline="top")
+
+	fig.rect(x=7,y=3,width = 'side', height = 'side',fill_color = color, fill_alpha = 0.8, line_color = colors['white'], source = datasource)
+	fig.text(x=7, y=3, text=[label], text_font_style="bold", text_font_size = "48px", text_align='center', text_baseline="middle")
+	fig.text(x=5, y=1, text=['original'], text_font_style="bold", text_font_size = "20px", text_align='left', text_baseline="top")
 
 	fig.outline_line_color = None
 	fig.grid.grid_line_color = None
@@ -75,19 +80,19 @@ def sliders_chart(query):
 	# the starting values should be those of the query
 	
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
-	score_hp = Slider(start = 1, end = 5, value = round(query[0],1), step = .1, title = 'Horsepower')
+	score_hp = Slider(start = 1, end = 5, value = query[0], step = .1, title = 'Horsepower', format = "0.0")
 	score_hp.js_on_change('value', slider_hp)	
 	
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
-	score_accel = Slider(start = 1, end = 5, value = round(query[1],1), step = .1, title = 'Acceleration')
+	score_accel = Slider(start = 1, end = 5, value = query[1], step = .1, title = 'Acceleration', format = "0.0")
 	score_accel.js_on_change('value', slider_accel)
 
 	slider_weight = CustomJS(args = dict(source = datasource), code = jscode2)
-	score_weight = Slider(start = 1, end = 5, value = round(query[2],1), step = .1, title = 'Weight')
+	score_weight = Slider(start = 1, end = 5, value = query[2], step = .1, title = 'Weight', format = "0.0")
 	score_weight.js_on_change('value', slider_weight)
 
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
-	score_mpg = Slider(start = 1, end = 5, value = round(query[3],1), step = .1, title = 'Consumption')
+	score_mpg = Slider(start = 1, end = 5, value = query[3], step = .1, title = 'Consumption', format = "0.0")
 	score_mpg.js_on_change('value', slider_mpg)
 	
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
