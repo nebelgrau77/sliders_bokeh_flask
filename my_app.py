@@ -15,7 +15,7 @@ from bokehtest import bokeh_test
 from scatter import make_scatter
 from bokeh_sliders import sliders_chart
 
-
+from helpers import explanation
 from dataframes import points, dataframe, assign_points, assign_cyl_points, dataframe_points
 
 
@@ -134,4 +134,5 @@ def mpgsliders():
 							origins = origins,
 							query = query,
 							origin = origin,
-							year = year)
+							year = year,
+							explanation = explanation)
