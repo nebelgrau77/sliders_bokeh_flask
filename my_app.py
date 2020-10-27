@@ -112,10 +112,7 @@ def mpgsliders():
 
 	year = request.args.get('year')
 	origin = request.args.get('origin')
-	
-	print('year: ', year, type(year))
-	print('origin: ', origin, type(origin))
-	
+		
 	if year and origin:
 		year, origin = int(year), origin
 	else:
@@ -123,11 +120,8 @@ def mpgsliders():
 	
 	query = data.loc[(data['model_year'] == year) & (data['origin'] == origin), 
 					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points']].mean()
-	
-		
+			
 	query = list(query)
-	
-	print(query)
 		
 	script, div, js_resources, css_resources = sliders_chart(query) # needs to be modified
 
