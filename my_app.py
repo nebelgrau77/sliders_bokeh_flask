@@ -21,7 +21,7 @@ from dataframes import points, dataframe, assign_points, assign_cyl_points, data
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
-database_file = 'sqlite:///{}'.format(os.path.join(project_dir, 'products.db'))
+database_file = 'sqlite:///{}'.format(os.path.join(project_dir, 'data/cars.db'))
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file # tell the app where the database is
@@ -30,66 +30,28 @@ bootstrap = Bootstrap(app) # initialize Bootstrap
 
 db = SQLAlchemy(app) # initialize a connection to the database
 
-class Product(db.Model):
-	__tablename__ = 'products'
-	index = db.Column(db.Integer(), unique=True, nullable=False, primary_key=True)
-	category = db.Column(db.String(40), unique = False, nullable=False) # e.g. TV, radio...
-	brand = db.Column(db.String(40), unique = False, nullable=False)
-	quality_score = db.Column(db.Integer, unique = False, nullable=True)
-	price_score = db.Column(db.Integer, unique = False, nullable=True)
+class Car(db.Model):
+    __tablename__ = 'cars'
+    index = db.Column(db.Integer(), unique = True, nullable=False, primary_key=True)
+    brand = db.Column(db.String(40), unique = False, nullable = False)
+    model = db.Column(db.String(40), unique = False, nullable = True)
+    model_year = db.Column(db.Integer(), unique = False, nullable=False)
+    origin = db.Column(db.String(80), unique = False, nullable = True)
+    cylinders = db.Column(db.Integer(), unique = False, nullable=False)
+    displacement_ccm = db.Column(db.Float(), unique = False, nullable=False)
+    horsepower = db.Column(db.Integer(), unique = False, nullable=False)
+    acceleration = db.Column(db.Float(), unique = False, nullable=False)
+    weight_kg = db.Column(db.Float(), unique = False, nullable=False)
+    liters_per_100km = db.Column(db.Float(), unique = False, nullable=False)
 
-	def __repr__(self):
-		return "<Index: {:05d}, Category: {}, Brand: {}, Quality score: {}, Price score: {}".format(self.index, self.category, self.brand, self.quality_score,self.price_score)
+    def __repr__(self):
+        return "<Brand: {}, Model: {}, Origin: {}>".format(self.brand, self.model, self.origin)
 
 @app.route('/')
 def home():
 	return render_template('home.html')
 
-@app.route('/sliders')
-def sliders():
-	
-	valueA = request.args.get('valueA')
-	valueB = request.args.get('valueB')	
-	
-	if valueA and valueB:
-		value = int(valueA)*int(valueB)
-	else:
-		value = 0
-	
-	return render_template('sliders.html', value=value)
-
-@app.route('/bokehtest')
-def bokehtest():
-	
-	#testquery = db.session.query(Product.quality_score, Product.price_score).filter(Product.index==1).one()
-
-	testquery = (6,7,4)
-
-	script, div, js_resources, css_resources = simple_bokeh_chart(testquery)
-
-	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=testquery)
-	
-@app.route('/bokehserver')
-def bkapp():
-	
-	testquery = (2,6)
-
-	script, div, js_resources, css_resources = bokeh_test()
-
-	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=testquery)
-
-
-@app.route('/scatter')
-def test_scatter():
-	
-	val = 5
-
-	script, div, js_resources, css_resources = make_scatter(val)
-
-	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,value=val)
-
 cars_database = os.path.join(project_dir,'data/cars.db')
-
 
 data = dataframe(cars_database, 'cars')
 data = assign_points(data, 'horsepower', points['horsepower'], reverse=True)
@@ -99,12 +61,9 @@ data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
 data = assign_cyl_points(data)
 
 
-
-
 @app.route('/mpg_sliders')
 def mpgsliders():
-
-	#data = dataframe_points(cars_database, 'cars', points)
+	
 	model_years = list(data['model_year'].unique())
 	origins = list(data['origin'].unique())
 
@@ -135,3 +94,55 @@ def mpgsliders():
 							query = query,
 							origin = origin,
 							year = year)
+
+
+@app.route('/better_sliders')
+def bettersliders():
+	
+	pass
+
+	# instead of creating a dataframe, just run a query with averages
+
+
+	# query example
+	# myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
+
+	model_years = db.session.query(Car.model_year.distinct()).all()
+	origins = db.session.query(Car.origin.distinct()).all()
+
+	
+	'''
+
+	# get mean values of the points for modelyear/origin chosen by the user: ['horsepower','accel', 'weight_kg', 'liters_per_100km', 'cylinders']
+
+	query = db.session.query(Product.quality_score, Product.price_score).filter(Product.index==1).one()
+
+	year = request.args.get('year')
+	origin = request.args.get('origin')
+		
+	if year and origin:
+		year, origin = int(year), origin
+	else:
+		year, origin = 1977, 'EUROPE'
+	
+	query = data.loc[(data['model_year'] == year) & (data['origin'] == origin), 
+					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points']].mean()
+			
+	query = list(query)
+		
+	script, div, js_resources, css_resources = sliders_chart(query) # needs to be modified
+
+	return render_template('bokeh_sliders.html', 
+							plot_script = script,
+							plot_div = div,
+							js_resources = js_resources,
+							css_resources=css_resources,
+							years = model_years,
+							origins = origins,
+							query = query,
+							origin = origin,
+							year = year)
+	
+	'''
+
+	return render_template('test_select.html', model_years = model_years, origins=origins)
