@@ -8,6 +8,11 @@
     <h3>Test selections</h3>
 </div>
 
+<h4>Origin: {{origin}}</h4>
+<h4>Query result: {{query}}</h4>
+
+<br>
+
 <h4>select year and origin:</h4>
 
 <form action='/better_sliders'>
@@ -18,7 +23,7 @@
   </select>
   <select name="origin">
     {% for o in origins %}
-    <option value="{{ y }}">{{ y }}</option>
+    <option value="{{ o }}">{{ o }}</option>
     {% endfor %}
   </select>
   <input type="submit">

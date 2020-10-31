@@ -15,6 +15,8 @@ from bokehtest import bokeh_test
 from scatter import make_scatter
 from bokeh_sliders import sliders_chart
 
+from sqlalchemy import func
+
 from helpers import explanation
 from dataframes import points, dataframe, assign_points, assign_cyl_points, dataframe_points
 
@@ -102,21 +104,11 @@ def bettersliders():
 	
 	pass
 
-	# instead of creating a dataframe, just run a query with averages
-
-
-	# query example
+	
 	# myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
 
-	model_years = db.session.query(Car.model_year.distinct()).all()
-	origins = db.session.query(Car.origin.distinct()).all()
-
-	
-	'''
-
-	# get mean values of the points for modelyear/origin chosen by the user: ['horsepower','accel', 'weight_kg', 'liters_per_100km', 'cylinders']
-
-	query = db.session.query(Product.quality_score, Product.price_score).filter(Product.index==1).one()
+	model_years = [item[0] for item in db.session.query(Car.model_year.distinct()).all()]
+	origins = [item[0] for item in db.session.query(Car.origin.distinct()).all()]
 
 	year = request.args.get('year')
 	origin = request.args.get('origin')
@@ -125,6 +117,19 @@ def bettersliders():
 		year, origin = int(year), origin
 	else:
 		year, origin = 1977, 'EUROPE'
+
+	myquery = db.session.query(func.avg(Car.horsepower), 
+							func.avg(Car.acceleration), 							
+							func.avg(Car.weight_kg),
+							func.avg(Car.liters_per_100km)).filter(Car.origin == origin).all()
+
+	'''
+
+	# get mean values of the points for modelyear/origin chosen by the user: ['horsepower','accel', 'weight_kg', 'liters_per_100km', 'cylinders']
+
+	query = db.session.query(Product.quality_score, Product.price_score).filter(Product.index==1).one()
+
+	
 	
 	query = data.loc[(data['model_year'] == year) & (data['origin'] == origin), 
 					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points']].mean()
@@ -142,13 +147,8 @@ def bettersliders():
 							origins = origins,
 							query = query,
 							origin = origin,
-<<<<<<< HEAD
 							year = year)
 	
 	'''
 
-	return render_template('test_select.html', model_years = model_years, origins=origins)
-=======
-							year = year)
-							
->>>>>>> 822bebcb7a9e38f900e5a5c12bcc5594a395452c
+	return render_template('test_select.html', model_years = model_years, origins=origins, query = myquery, origin = origin.title())
