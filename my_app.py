@@ -54,10 +54,13 @@ data = assign_points(data, 'weight_kg', points['weight_kg'])
 data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
 data = assign_cyl_points(data)
 
-
 @app.route('/mpg_sliders')
 def mpgsliders():
-	
+
+	'''get mean values of points from the precalculated pandas dataframe: 
+	this requires querying the whole database into a pandas df and running the calculations;
+	it means that the whole dataframe is in memory all the time; makes it easier later as the points are already calculated'''
+
 	model_years = list(data['model_year'].unique())
 	origins = list(data['origin'].unique())
 
@@ -88,14 +91,15 @@ def mpgsliders():
 							query = query,
 							origin = origin,
 							year = year)
-							
+						
 
 
 @app.route('/better_sliders')
 def bettersliders():
 	
-	pass
-
+	'''get mean values of points from the precalculated pandas dataframe: 
+	this requires querying the whole database into a pandas df and running the calculations;
+	it means that the whole dataframe is in memory all the time; makes it easier later as the points are already calculated'''
 	
 	# myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
 
