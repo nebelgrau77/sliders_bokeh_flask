@@ -15,7 +15,7 @@ from bokehtest import bokeh_test
 from scatter import make_scatter
 from bokeh_sliders import sliders_chart
 
-
+from helpers import explanation
 from dataframes import points, dataframe, assign_points, assign_cyl_points, dataframe_points
 
 
@@ -94,6 +94,7 @@ def mpgsliders():
 							query = query,
 							origin = origin,
 							year = year)
+							
 
 
 @app.route('/better_sliders')
@@ -141,8 +142,13 @@ def bettersliders():
 							origins = origins,
 							query = query,
 							origin = origin,
+<<<<<<< HEAD
 							year = year)
 	
 	'''
 
 	return render_template('test_select.html', model_years = model_years, origins=origins)
+=======
+							year = year)
+							
+>>>>>>> 822bebcb7a9e38f900e5a5c12bcc5594a395452c

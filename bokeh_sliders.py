@@ -39,26 +39,26 @@ def sliders_chart(query):
 	fig.axis.major_tick_line_color = None
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
-	
+
 
 	jscode_master = """
         var data = source.data;
 		var v = cb_obj.value
-		
+
 		var hp = data['hp']
 		var accel = data['accel']
 		var weight = data['weight']
 		var mpg = data['mpg']
-		
+
 		var label = data['label']
 		var color = data['color']
-		
+
 		%s[0] = v
-		
+
 		var score =  v * %s + %s * %s + %s * %s + %s * %s
-		
+
 		label[0] = score.toFixed(1)
-		
+
 		if (score < 3) {
 			color[0]  = '%s'
 		}
@@ -68,21 +68,21 @@ def sliders_chart(query):
 		else {
 			color[0]  = '%s'
 		}
-		
+
 		source.change.emit();
     """
-	
+
 	jscode0 = js_formatter(jscode_master, 'hp', weights)
 	jscode1 = js_formatter(jscode_master, 'accel', weights)
 	jscode2 = js_formatter(jscode_master, 'weight', weights)
 	jscode3 = js_formatter(jscode_master, 'mpg', weights)
-		
+
 	# the starting values should be those of the query
-	
+
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
 	score_hp = Slider(start = 1, end = 5, value = query[0], step = .1, title = 'Horsepower', format = "0.0")
-	score_hp.js_on_change('value', slider_hp)	
-	
+	score_hp.js_on_change('value', slider_hp)
+
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
 	score_accel = Slider(start = 1, end = 5, value = query[1], step = .1, title = 'Acceleration', format = "0.0")
 	score_accel.js_on_change('value', slider_accel)
@@ -94,11 +94,11 @@ def sliders_chart(query):
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
 	score_mpg = Slider(start = 1, end = 5, value = query[3], step = .1, title = 'Consumption', format = "0.0")
 	score_mpg.js_on_change('value', slider_mpg)
-	
+
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
 	layout = row(sliders, fig)
 
-	#curdoc().add_root(layout) # not sure if that's even necessary	
+	#curdoc().add_root(layout) # not sure if that's even necessary
 
 	#grab the static resources
 	js_resources = INLINE.render_js()
