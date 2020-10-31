@@ -6,20 +6,12 @@ from flask import Flask, render_template, request, redirect
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 
-from bokeh.embed import server_session
-from bokeh.client import pull_session
-
-from make_bokeh_chart import simple_bokeh_chart
-
-from bokehtest import bokeh_test
-from scatter import make_scatter
 from bokeh_sliders import sliders_chart
 
 from sqlalchemy import func
 
 from helpers import explanation
 from dataframes import points, dataframe, assign_points, assign_cyl_points, dataframe_points
-
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -118,24 +110,15 @@ def bettersliders():
 	else:
 		year, origin = 1977, 'EUROPE'
 
+	# get mean values of the points for modelyear/origin chosen by the user: horsepower,acceleration,weight_kg and liters_per_100km
+
 	myquery = db.session.query(func.avg(Car.horsepower), 
 							func.avg(Car.acceleration), 							
 							func.avg(Car.weight_kg),
 							func.avg(Car.liters_per_100km)).filter(Car.origin == origin).all()
 
 	'''
-
-	# get mean values of the points for modelyear/origin chosen by the user: ['horsepower','accel', 'weight_kg', 'liters_per_100km', 'cylinders']
-
-	query = db.session.query(Product.quality_score, Product.price_score).filter(Product.index==1).one()
-
 	
-	
-	query = data.loc[(data['model_year'] == year) & (data['origin'] == origin), 
-					['horsepower_points', 'acceleration_points', 'weight_kg_points', 'liters_per_100km_points']].mean()
-			
-	query = list(query)
-		
 	script, div, js_resources, css_resources = sliders_chart(query) # needs to be modified
 
 	return render_template('bokeh_sliders.html', 
