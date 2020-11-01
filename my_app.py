@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from bokeh_sliders import sliders_chart, better_sliders_chart
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 from helpers import explanation
 from dataframes import points, dataframe, assign_points, assign_cyl_points, dataframe_points
@@ -90,7 +90,8 @@ def mpgsliders():
 							origins = origins,
 							query = query,
 							origin = origin,
-							year = year)
+							year = year, 
+							explanation = explanation)
 						
 
 
@@ -101,8 +102,6 @@ def bettersliders():
 	this requires querying the whole database into a pandas df and running the calculations;
 	it means that the whole dataframe is in memory all the time; makes it easier later as the points are already calculated'''
 	
-	# myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
-
 	model_years = [item[0] for item in db.session.query(Car.model_year.distinct()).all()]
 	origins = [item[0] for item in db.session.query(Car.origin.distinct()).all()]
 
@@ -114,12 +113,10 @@ def bettersliders():
 	else:
 		year, origin = 1977, 'EUROPE'
 
-	# get mean values of the points for modelyear/origin chosen by the user: horsepower,acceleration,weight_kg and liters_per_100km
-
 	query = db.session.query(func.avg(Car.horsepower), 
 							func.avg(Car.acceleration), 							
 							func.avg(Car.weight_kg),
-							func.avg(Car.liters_per_100km)).filter(Car.origin == origin).all()
+							func.avg(Car.liters_per_100km)).filter(and_(Car.origin == origin, Car.model_year==year)).all()
 
 	query = list(query[0])
 
@@ -127,7 +124,7 @@ def bettersliders():
 	
 	script, div, js_resources, css_resources = better_sliders_chart(query) # needs to be modified
 
-	return render_template('bokeh_sliders.html', 
+	return render_template('bokeh_raw_sliders.html', 
 							plot_script = script,
 							plot_div = div,
 							js_resources = js_resources,
@@ -136,6 +133,7 @@ def bettersliders():
 							origins = origins,
 							query = query,
 							origin = origin,
-							year = year)
+							year = year,
+							explanation=explanation)
 	
 	
