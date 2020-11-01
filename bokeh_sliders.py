@@ -262,7 +262,7 @@ def better_sliders_chart(query):
 	# the start/end values and steps have to be adjusted to reflect the parameters, e.g. horsepower 50 - 300 etc.
 
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
-	score_hp = Slider(start = 30, end = 300, value = query[0], step = 5, title = 'Horsepower', format = "0.0")
+	score_hp = Slider(start = 30, end = 300, value = query[0], step = 5, title = 'Horsepower', format = "0")
 	score_hp.js_on_change('value', slider_hp)
 
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
@@ -270,7 +270,7 @@ def better_sliders_chart(query):
 	score_accel.js_on_change('value', slider_accel)
 
 	slider_weight = CustomJS(args = dict(source = datasource), code = jscode2)
-	score_weight = Slider(start = 500, end = 2500, value = query[2], step = 25, title = 'Weight', format = "0.0")
+	score_weight = Slider(start = 500, end = 2500, value = query[2], step = 25, title = 'Weight', format = "0")
 	score_weight.js_on_change('value', slider_weight)
 
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
