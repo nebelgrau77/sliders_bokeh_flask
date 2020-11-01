@@ -121,8 +121,6 @@ def bettersliders():
 
 	query = list(query[0])
 
-	print(query)
-	
 	script, div, js_resources, css_resources = better_sliders_chart(query) # needs to be modified
 
 	return render_template('bokeh_raw_sliders.html', 

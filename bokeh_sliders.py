@@ -5,8 +5,8 @@ from bokeh.models import ColumnDataSource, CategoricalColorMapper, Slider, Hover
 from bokeh.layouts import row, column, gridplot
 from bokeh.io import curdoc
 
-from helpers import get_color, score_calc, score_calc_sliders, js_formatter, js_formatter_raw
-from parameters import colors, weights
+from helpers import get_color, score_calc, score_calc_sliders, js_formatter, js_formatter_raw, js_formatter_better
+from parameters import colors, weights, thresholds
 
 def sliders_chart(query):
 	'''make a simple square chart'''
@@ -84,19 +84,19 @@ def sliders_chart(query):
 	# the starting values should be those of the query
 
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
-	score_hp = Slider(start = 1, end = 5, value = query[0], step = .1, title = 'Horsepower', format = "0.0")
+	score_hp = Slider(start = 1, end = 5, value = query[0], step = .1, title = 'Engine power [HP]', format = "0.0")
 	score_hp.js_on_change('value', slider_hp)
 
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
-	score_accel = Slider(start = 1, end = 5, value = query[1], step = .1, title = 'Acceleration', format = "0.0")
+	score_accel = Slider(start = 1, end = 5, value = query[1], step = .1, title = 'Acceleration 0-96 km/h [s]', format = "0.0")
 	score_accel.js_on_change('value', slider_accel)
 
 	slider_weight = CustomJS(args = dict(source = datasource), code = jscode2)
-	score_weight = Slider(start = 1, end = 5, value = query[2], step = .1, title = 'Weight', format = "0.0")
+	score_weight = Slider(start = 1, end = 5, value = query[2], step = .1, title = 'Weight [kg]', format = "0.0")
 	score_weight.js_on_change('value', slider_weight)
 
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
-	score_mpg = Slider(start = 1, end = 5, value = query[3], step = .1, title = 'Consumption', format = "0.0")
+	score_mpg = Slider(start = 1, end = 5, value = query[3], step = .1, title = 'Fuel onsumption [l/100km]', format = "0.0")
 	score_mpg.js_on_change('value', slider_mpg)
 
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
@@ -152,7 +152,8 @@ def better_sliders_chart(query):
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
 
-	'''rewrite the JS code to accept the threshold values from Python code arguments; use f-strings for clarity'''
+	'''rewrite the JS code to accept the threshold values from Python code arguments; ideally use f-strings for clarity'''
+	
 
 	jscode_master = """
         var data = source.data;
@@ -166,116 +167,118 @@ def better_sliders_chart(query):
 		var label = data['label']
 		var color = data['color']
 
-		%s[0] = v //this is the value that is updated by this slider
+		{slider_value}[0] = v //this is the value that is updated by this slider
 
 		var hp_points = 0
 		var accel_points = 0
 		var weight_points = 0
 		var mpg_points = 0
 		
-		if (hp > 180) {
+		if (hp > {hp_thresh_3}) {{
 			hp_points = 5
-		} 
-		else if (hp > 150) {
+		}}
+		else if (hp > {hp_thresh_2}) {{
 			hp_points = 4
-		}
-		else if (hp > 125) {
+		}}
+		else if (hp > {hp_thresh_1}) {{
 			hp_points = 3
-		}
-		else if (hp > 100) {
+		}}
+		else if (hp > {hp_thresh_0}) {{
 			hp_points = 2
-		}
-		else {
+		}}
+		else {{
 			hp_points = 1
-		}
+		}}
 
-		if (accel < 11.3) {
+		if (accel < {accel_thresh_3}) {{
 			accel_points = 5
-		} 
-		else if (accel < 13.0) {
+		}}
+		else if (accel < {accel_thresh_2}) {{
 			accel_points = 4
-		}
-		else if (accel < 13.8) {
+		}}
+		else if (accel < {accel_thresh_1}) {{
 			accel_points = 3
-		}
-		else if (accel < 14.7) {
+		}}
+		else if (accel < {accel_thresh_0}) {{
 			accel_points = 2
-		}
-		else {
+		}}
+		else {{
 			accel_points = 1
-		}
+		}}
 
-		if (weight < 870) {
+		if (weight < {weight_thresh_3}) {{
 			weight_points = 5
-		} 
-		else if (weight < 950) {
+		}}
+		else if (weight < {weight_thresh_2}) {{
 			weight_points = 4
-		}
-		else if (weight < 1010) {
+		}}
+		else if (weight < {weight_thresh_1}) {{
 			weight_points = 3
-		}
-		else if (weight < 1170) {
+		}}
+		else if (weight < {weight_thresh_0}) {{
 			weight_points = 2
-		}
-		else {
+		}}
+		else {{
 			weight_points = 1
-		}
+		}}
 
-		if (mpg < 6.4) {
+		if (mpg < {mpg_thresh_3}) {{
 			mpg_points = 5
-		} 
-		else if (mpg < 7.3) {
+		}}
+		else if (mpg < {mpg_thresh_2}) {{
 			mpg_points = 4
-		}
-		else if (mpg < 8.1) {
+		}}
+		else if (mpg < {mpg_thresh_1}) {{
 			mpg_points = 3
-		}
-		else if (mpg < 9.4) {
+		}}
+		else if (mpg < {mpg_thresh_0}) {{
 			mpg_points = 2
-		}
-		else {
+		}}
+		else {{
 			mpg_points = 1
-		}
+		}}
 
-		var score = hp_points * %s + accel_points * %s + weight_points * %s + mpg_points * %s
+		var score = hp_points * {hp_weight} + accel_points * {accel_weight} + weight_points * {weight_weight} + mpg_points * {mpg_weight}
 
 		label[0] = score.toFixed(1) 
 
-		if (score < 3) {
-			color[0]  = '%s'
-		}
-		else if (score < 4) {
-			color[0]  = '%s'
-		}
-		else {
-			color[0]  = '%s'
-		}
+		if (score < 3) {{
+			color[0]  = '{red}'
+		}}
+		else if (score < 4) {{
+			color[0]  = '{yellow}'
+		}}
+		else {{
+			color[0]  = '{green}'
+		}}
 
 		source.change.emit();
     """
 
 
-	jscode0 = js_formatter_raw(jscode_master, 'hp', weights)
-	jscode1 = js_formatter_raw(jscode_master, 'accel', weights)
-	jscode2 = js_formatter_raw(jscode_master, 'weight', weights)
-	jscode3 = js_formatter_raw(jscode_master, 'mpg', weights)
+	jscode0 = js_formatter_better(jscode_master, 'hp', weights, colors, thresholds)
+	print(jscode0)
+	jscode1 = js_formatter_better(jscode_master, 'accel', weights, colors, thresholds)	
+	jscode2 = js_formatter_better(jscode_master, 'weight', weights, colors, thresholds)	
+	jscode3 = js_formatter_better(jscode_master, 'mpg', weights, colors, thresholds)
+	
 
 	# the start/end values and steps have to be adjusted to reflect the parameters, e.g. horsepower 50 - 300 etc.
 
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
-	score_hp = Slider(start = 30, end = 300, value = query[0], step = 5, title = 'Horsepower', format = "0")
+	score_hp = Slider(start = 30, end = 300, value = query[0], step = 5, title = 'Engine power [HP]', format = "0")
 	score_hp.js_on_change('value', slider_hp)
 
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
-	score_accel = Slider(start = 5, end = 30, value = query[1], step = .5, title = 'Acceleration', format = "0.0")
+	score_accel = Slider(start = 5, end = 30, value = query[1], step = .5, title = 'Acceleration 0-96 km/h [s]', format = "0.0")
 	score_accel.js_on_change('value', slider_accel)
 
 	slider_weight = CustomJS(args = dict(source = datasource), code = jscode2)
-	score_weight = Slider(start = 500, end = 2500, value = query[2], step = 25, title = 'Weight', format = "0")
+	score_weight = Slider(start = 500, end = 2500, value = query[2], step = 25, title = 'Weight [kg]', format = "0")
 	score_weight.js_on_change('value', slider_weight)
 
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
-	score_mpg = Slider(start = 5, end = 30, value = query[3], step = .1, title = 'Consumption', format = "0.0")
+	score_mpg = Slider(start = 5, end = 30, value = query[3], step = .1, title = 'Fuel consumption [l/100km]', format = "0.0")
 	score_mpg.js_on_change('value', slider_mpg)
 
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
