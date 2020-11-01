@@ -1,6 +1,4 @@
-colors = {'white': '#ffffff', 'gray': '#888888', 'red': '#de4307', 'yellow': '#f6d04d', 'green': '#8bc24c'}
-weights = {'hp': 0.2, 'accel': 0.3, 'weight': 0.1, 'mpg': 0.4}
-quality_weight, price_weight = 0.7, 0.3	
+from parameters import colors
 
 def get_color(value):
 	if value > 10:

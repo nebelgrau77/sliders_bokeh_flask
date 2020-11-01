@@ -11,7 +11,8 @@ from bokeh_sliders import sliders_chart, better_sliders_chart
 from sqlalchemy import func, and_
 
 from helpers import explanation
-from dataframes import points, dataframe, assign_points, assign_cyl_points, dataframe_points
+from dataframes import dataframe, assign_points, assign_cyl_points, dataframe_points
+from parameters import thresholds
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -48,10 +49,10 @@ def home():
 cars_database = os.path.join(project_dir,'data/cars.db')
 
 data = dataframe(cars_database, 'cars')
-data = assign_points(data, 'horsepower', points['horsepower'], reverse=True)
-data = assign_points(data, 'acceleration', points['acceleration'])
-data = assign_points(data, 'weight_kg', points['weight_kg'])
-data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
+data = assign_points(data, 'horsepower', thresholds['horsepower'], reverse=True)
+data = assign_points(data, 'acceleration', thresholds['acceleration'])
+data = assign_points(data, 'weight_kg', thresholds['weight_kg'])
+data = assign_points(data, 'liters_per_100km', thresholds['liters_per_100km'])
 data = assign_cyl_points(data)
 
 @app.route('/mpg_sliders')

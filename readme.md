@@ -11,7 +11,7 @@ useful examples:
 Sliders work with JS callback, but it's a bit hacky. With proper use of string formatting it is still possible to maintain the modular approach where the weights, colors etc. can be quickly updated. 
 
 TO DO:   
-* Instead of partial points, have the sliders change the actual values (eg. from 50 to 250 HP).
+* improve modularity by using f-strings to format the JS code snippets
 * Add CRUD interface to be able to add, update or remove records.
 
 	

@@ -5,7 +5,8 @@ from bokeh.models import ColumnDataSource, CategoricalColorMapper, Slider, Hover
 from bokeh.layouts import row, column, gridplot
 from bokeh.io import curdoc
 
-from helpers import get_color, score_calc, score_calc_sliders, colors, js_formatter, js_formatter_raw, weights
+from helpers import get_color, score_calc, score_calc_sliders, js_formatter, js_formatter_raw
+from parameters import colors, weights
 
 def sliders_chart(query):
 	'''make a simple square chart'''
@@ -151,7 +152,7 @@ def better_sliders_chart(query):
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
 
-	# JS code needs to be rewritten, to calculate the points from actual values
+	'''rewrite the JS code to accept the threshold values from Python code arguments; use f-strings for clarity'''
 
 	jscode_master = """
         var data = source.data;
