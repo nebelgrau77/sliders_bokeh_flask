@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, redirect
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 
-from bokeh_sliders import sliders_chart
+from bokeh_sliders import sliders_chart, better_sliders_chart
 
 from sqlalchemy import func
 
@@ -116,14 +116,16 @@ def bettersliders():
 
 	# get mean values of the points for modelyear/origin chosen by the user: horsepower,acceleration,weight_kg and liters_per_100km
 
-	myquery = db.session.query(func.avg(Car.horsepower), 
+	query = db.session.query(func.avg(Car.horsepower), 
 							func.avg(Car.acceleration), 							
 							func.avg(Car.weight_kg),
 							func.avg(Car.liters_per_100km)).filter(Car.origin == origin).all()
 
-	'''
+	query = list(query[0])
+
+	print(query)
 	
-	script, div, js_resources, css_resources = sliders_chart(query) # needs to be modified
+	script, div, js_resources, css_resources = better_sliders_chart(query) # needs to be modified
 
 	return render_template('bokeh_sliders.html', 
 							plot_script = script,
@@ -136,6 +138,4 @@ def bettersliders():
 							origin = origin,
 							year = year)
 	
-	'''
-
-	return render_template('test_select.html', model_years = model_years, origins=origins, query = myquery, origin = origin.title())
+	

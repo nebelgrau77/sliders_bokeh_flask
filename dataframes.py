@@ -39,3 +39,45 @@ def dataframe_points(dbfile, tablename, points):
 	data = assign_points(data, 'liters_per_100km', points['liters_per_100km'])
 	data = assign_cyl_points(data)
 	return data
+
+
+'''
+
+COULD BE AN IDEA
+
+
+In [1]: acceleration =  {14.7:2, 13.8:3, 13:4, 11.3:5}
+
+In [2]: acceleration.keys()
+Out[2]: dict_keys([14.7, 13.8, 13, 11.3])
+
+In [3]: a = 12
+
+In [4]: for x in acceleration.keys():
+   ...:     if a > x:
+   ...:         print(x)
+   ...: 
+11.3
+
+In [5]: for x in acceleration.keys():
+   ...:     if a < x:
+   ...:         print(x)
+   ...: 
+   ...: 
+14.7
+13.8
+13
+
+In [6]: for x in acceleration.keys():
+   ...:     if a < x:
+   ...:         t = x
+   ...: print(acceleration[t])
+   ...: 
+   ...: 
+   ...: 
+4
+
+
+IT WON'T WORK FOR VALUES BELOW THE FIRST THRESHOLD
+
+'''
