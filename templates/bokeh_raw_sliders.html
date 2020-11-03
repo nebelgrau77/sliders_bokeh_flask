@@ -16,12 +16,23 @@
     <div class="container">
 
         <div class = "page-header">
-            <h3>DATA: {{origin}} {{year}}</h3>
+            <h4>Info about the dataset, EDA and cleanup <a href="https://github.com/nebelgrau77/cars_mpg_eda">here</a>.</h4>
+            <br>
+            <h4>Current data: {{origin}} {{year}}</h4>
         </div>
 
         <div class="row">
-            <div class="col-lg-6">
-                <form action='/better_sliders'>
+            <div class="col-md-9">
+                {{ plot_div|indent(4)|safe }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <p class = "breaks">Choose origin and model year:</p>
+            </div>
+            <div class="col-md-6">
+                <form action='/square_sliders'>
                     <select name="year">
                         {% for y in years %}
                             <option value="{{ y }}">{{ y }}</option>
@@ -35,16 +46,15 @@
                     <input type="submit">
                 </form>
             </div>
+
         </div>
 
         <div class="row">
-            <div class="col-lg-9">
-                {{ plot_div|indent(4)|safe }}
-            </div>
+        <br>
         </div>
 
         <div class="row">
-            <div class="col-lg-9">                
+            <div class="col-md-9">
                 <p class = "breaks">{{explanation}}</p>
             </div>
         </div>
