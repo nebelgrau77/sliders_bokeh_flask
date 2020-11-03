@@ -5,14 +5,13 @@ import pandas as pd
 from flask import Flask, render_template, request, redirect
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func, and_
 
 from bokeh_sliders import sliders_chart, better_sliders_chart
 
-from sqlalchemy import func, and_
-
-from helpers import explanation
 from dataframes import dataframe, assign_points, assign_cyl_points, dataframe_points
 from parameters import thresholds
+from helpers import explanation
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))

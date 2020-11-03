@@ -3,7 +3,6 @@ from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.models import ColumnDataSource, CategoricalColorMapper, Slider, HoverTool, CustomJS
 from bokeh.layouts import row, column, gridplot
-from bokeh.io import curdoc
 
 from helpers import get_color, score_calc, score_calc_sliders, js_formatter, js_formatter_raw, js_formatter_better
 from parameters import colors, weights, thresholds
@@ -67,8 +66,6 @@ def sliders_chart(query):
 
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
 	layout = row(sliders, fig)
-
-	#curdoc().add_root(layout) # not sure if that's even necessary
 
 	#grab the static resources
 	js_resources = INLINE.render_js()
@@ -150,8 +147,6 @@ def better_sliders_chart(query):
 
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
 	layout = row(sliders, fig)
-
-	#curdoc().add_root(layout) # not sure if that's even necessary
 
 	#grab the static resources
 	js_resources = INLINE.render_js()

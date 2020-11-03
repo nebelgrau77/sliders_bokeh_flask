@@ -32,15 +32,15 @@
                 <p class = "breaks">Choose origin and model year:</p>
             </div>
             <div class="col-md-6">
-                <form action='/better_sliders'>
-                    <select name="year">
-                        {% for y in years %}
-                            <option value="{{ y }}">{{ y }}</option>
-                        {% endfor %}
-                    </select>
+                <form action='/better_sliders'>                    
                     <select name="origin">
                         {% for o in origins %}
                             <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="year">
+                        {% for y in years %}
+                            <option value="{{ y }}">{{ y }}</option>
                         {% endfor %}
                     </select>
                     <input type="submit">
