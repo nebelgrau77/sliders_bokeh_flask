@@ -49,19 +49,19 @@ def sliders_chart(query):
 	# the starting values should be those of the query
 
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
-	score_hp = Slider(start = 1, end = 5, value = query[0], step = .1, title = 'Engine power [HP]', format = "0.0")
+	score_hp = Slider(start = 1, end = 5, value = query[0], step = .1, title = 'Engine power', format = "0.0")
 	score_hp.js_on_change('value', slider_hp)
 
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
-	score_accel = Slider(start = 1, end = 5, value = query[1], step = .1, title = 'Acceleration 0-96 km/h [s]', format = "0.0")
+	score_accel = Slider(start = 1, end = 5, value = query[1], step = .1, title = 'Acceleration', format = "0.0")
 	score_accel.js_on_change('value', slider_accel)
 
 	slider_weight = CustomJS(args = dict(source = datasource), code = jscode2)
-	score_weight = Slider(start = 1, end = 5, value = query[2], step = .1, title = 'Weight [kg]', format = "0.0")
+	score_weight = Slider(start = 1, end = 5, value = query[2], step = .1, title = 'Weight', format = "0.0")
 	score_weight.js_on_change('value', slider_weight)
 
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
-	score_mpg = Slider(start = 1, end = 5, value = query[3], step = .1, title = 'Fuel onsumption [l/100km]', format = "0.0")
+	score_mpg = Slider(start = 1, end = 5, value = query[3], step = .1, title = 'Fuel consumption', format = "0.0")
 	score_mpg.js_on_change('value', slider_mpg)
 
 	sliders = column(score_mpg, score_accel, score_hp, score_weight)
@@ -131,19 +131,19 @@ def better_sliders_chart(query):
 
 	slider_hp = CustomJS(args = dict(source = datasource), code = jscode0)
 
-	score_hp = Slider(start = 1, end = 5, value = query[0], step = .1, title = 'Horsepower', format = "0.0", width_policy = 'fixed', width = 200)
+	score_hp = Slider(start = 30, end = 300, value = query[0], step = 5, title = 'Engine power [HP]', format = "0")
 	score_hp.js_on_change('value', slider_hp)
 
 	slider_accel = CustomJS(args = dict(source = datasource), code = jscode1)
-	score_accel = Slider(start = 1, end = 5, value = query[1], step = .1, title = 'Acceleration', format = "0.0", width_policy = 'fit')
+	score_accel = Slider(start = 5, end = 30, value = query[1], step = .1, title = 'Acceleration 0-96 km/h [s]', format = "0.0")
 	score_accel.js_on_change('value', slider_accel)
 
 	slider_weight = CustomJS(args = dict(source = datasource), code = jscode2)
-	score_weight = Slider(start = 1, end = 5, value = query[2], step = .1, title = 'Weight', format = "0.0", width_policy = 'fit')
+	score_weight = Slider(start = 500, end = 2500, value = query[2], step = 25, title = 'Weight [kg]', format = "0")
 	score_weight.js_on_change('value', slider_weight)
 
 	slider_mpg = CustomJS(args = dict(source = datasource), code = jscode3)
-	score_mpg = Slider(start = 1, end = 5, value = query[3], step = .1, title = 'Consumption', format = "0.0", width_policy = 'fit')
+	score_mpg = Slider(start = 5, end = 30, value = query[3], step = .1, title = 'Fuel consumption [l/100km]', format = "0.0")
 
 	score_mpg.js_on_change('value', slider_mpg)
 

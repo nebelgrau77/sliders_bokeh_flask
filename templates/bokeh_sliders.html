@@ -26,35 +26,13 @@
                 {{ plot_div|indent(4)|safe }}
             </div>
         </div>
-<<<<<<< HEAD
-    </div>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <form action='/mpg_sliders	'>
-                <select name="year">
-                    {% for y in years %}
-                        <option value="{{ y }}">{{ y }}</option>
-                    {% endfor %}
-                </select>        
-                <select name="origin">
-                    {% for o in origins %}
-                        <option value="{{ o }}">{{ o }}</option>
-                    {% endfor %}
-                </select>    
-                <input type="submit">    
-            </form>
-        </div>        
-    </div>
-</div>
-=======
 
         <div class="row">
             <div class="col-md-3">
                 <p class = "breaks">Choose origin and model year:</p>
             </div>
             <div class="col-md-6">
-                <form action='/mpg_sliders'>
+                <form action='/better_sliders'>                    
                     <select name="origin">
                         {% for o in origins %}
                             <option value="{{ o }}">{{ o }}</option>
@@ -81,9 +59,8 @@
             </div>
         </div>
 
+</div>
 
-    </div>
->>>>>>> 2424c8537cea9b45ad2fa7222b5ec0562d07e43c
 
 {% endblock %}
 
