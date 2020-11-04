@@ -11,7 +11,8 @@ useful examples:
 Sliders work with JS callback, but it's a bit hacky. With proper use of string formatting it is still possible to maintain the modular approach where the weights, colors etc. can be quickly updated. 
 
 TO DO:   
-* Instead of partial points, have the sliders change the actual values (eg. from 50 to 250 HP).
-* Add CRUD interface to be able to add, update or remove records.
+* further improve modularity of the JS code if possible
+* add CRUD interface to be able to add, update or remove records.
+* add a machine learning-based app that will guess the origin of the car based on supplied parameters
 
 	
