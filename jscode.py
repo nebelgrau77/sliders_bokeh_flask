@@ -130,3 +130,39 @@ jscode_master2 = """
 
 		source.change.emit();
     """
+
+
+
+jscode_bday = """
+    var data = source.data;
+	var v = cb_obj.value
+
+	var year = data['year']
+	var month = data['month']
+	var day = data['day']
+
+	var label = data['label']
+	var color = data['color']
+
+	{slidervalue}[0] = v
+
+	var red = year * 255/99
+	var green = (month-1) * 255/11
+	var blue = (day-1) * 255/30
+
+	var red_string = Math.floor(red).toString(16).padStart(2, '0')
+	var green_string = Math.floor(green).toString(16).padStart(2, '0')
+	var blue_string = Math.floor(blue).toString(16).padStart(2, '0')
+
+	color[0] = "#" + red_string + green_string + blue_string
+
+	label[0] = year.toString(10).padStart(2, '0') 
+				+ '/' 
+				+ month.toString(10).padStart(2, '0')
+				+ '/'
+				+ day.toString(10).padStart(2, '0')
+				+ '\\n' 
+				+ color[0]
+
+	source.change.emit();
+"""

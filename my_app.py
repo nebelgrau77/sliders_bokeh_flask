@@ -140,9 +140,11 @@ def bettersliders():
 @app.route('/birthday_color')
 def birthday_color():
 	
-	bdate = (1,1,70) # Linux day zero :)
+	#bdate = (1,1,70) # Linux day zero :)
 
-	script, div, js_resources, css_resources = birthday_sliders(bdate)
+
+
+	script, div, js_resources, css_resources = birthday_sliders()
 
 	return render_template('birthday.html', 
 							plot_script = script,

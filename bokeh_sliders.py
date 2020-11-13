@@ -6,7 +6,7 @@ from bokeh.layouts import row, column, gridplot
 
 from helpers import get_color, score_calc, score_calc_sliders, js_formatter, js_formatter_raw, js_formatter_better
 from parameters import colors, weights, thresholds
-from jscode import jscode_master1, jscode_master2
+from jscode import jscode_master1, jscode_master2, jscode_bday
 
 from birthday import scaler, birthdaycolor
 
@@ -118,16 +118,11 @@ def better_sliders_chart(query):
 	fig.axis.major_label_text_color = None
 
 	'''rewrite the JS code to accept the threshold values from Python code arguments; ideally use f-strings for clarity'''
-	
-
-	
-
 
 	jscode0 = js_formatter_better(jscode_master2, 'hp', weights, colors, thresholds)
 	jscode1 = js_formatter_better(jscode_master2, 'accel', weights, colors, thresholds)	
 	jscode2 = js_formatter_better(jscode_master2, 'weight', weights, colors, thresholds)	
-	jscode3 = js_formatter_better(jscode_master2, 'mpg', weights, colors, thresholds)
-	
+	jscode3 = js_formatter_better(jscode_master2, 'mpg', weights, colors, thresholds)	
 
 	# the start/end values and steps have to be adjusted to reflect the parameters, e.g. horsepower 50 - 300 etc.
 
@@ -162,26 +157,32 @@ def better_sliders_chart(query):
 	return script, div, js_resources, css_resources
 
 
-def birthday_sliders(birthdate):
+def birthday_sliders():
 
 	#year, month, day = birthdate # birthdate is a tuple (YY,MM,DD)
 
-	x_range = (0,5)
-	y_range = (0,5)
+	x_range = (0,4)
+	y_range = (0,4)
 
 	coords = ([2],[2])
 	
-	birthdate = '770207'
+	bday_year = 70
+	bday_month = 1
+	bday_day = 1
 
-	color = birthdaycolor(birthdate) # function must be rewritten to accept a tuple of integers coming from the sliders.. unless I rewrite it in JS?
+	
+
+	color = birthdaycolor('700101') # replace with a simple hex value, remove the calc function
 
 	side = 4
 
-	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], color = [color], label = [label], side = [side]))
+	label = '70/01/01'
 
-	fig = figure(title=None, plot_width=280, plot_height=280,x_range = x_range, y_range = y_range, toolbar_location=None)
+	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], year = [bday_year], month = [bday_month], day = [bday_day], color = [color], label = [label], side = [side]))
+
+	fig = figure(title=None, plot_width=400, plot_height=400,x_range = x_range, y_range = y_range, toolbar_location=None)
 	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)
-	fig.text(x='x', y='y', text=[label], text_font_style="bold", text_font_size = "48px", text_align='center', text_baseline="middle")
+	fig.text(x='x', y='y', text='label', text_font_style="bold", text_font_size = "48px", text_align='center', text_baseline="middle", source = datasource)
 
 	fig.outline_line_color = None
 	fig.grid.grid_line_color = None
@@ -190,5 +191,32 @@ def birthday_sliders(birthdate):
 	fig.axis.minor_tick_line_color = None
 	fig.axis.major_label_text_color = None
 
+	jscode_year = jscode_bday.format(slidervalue='year')
+	jscode_month = jscode_bday.format(slidervalue='month')
+	jscode_day = jscode_bday.format(slidervalue='day')
 
-	pass
+
+	change_year = CustomJS(args = dict(source = datasource), code = jscode_year)
+	slider_year = Slider(start = 0, end = 99, value = 70, step = 1, title = 'Year', format = "00")
+	slider_year.js_on_change('value', change_year)
+
+	change_month = CustomJS(args = dict(source = datasource), code = jscode_month)
+	slider_month = Slider(start = 1, end = 12, value = 1, step = 1, title = 'Month', format = "00")
+	slider_month.js_on_change('value', change_month)
+
+	change_day = CustomJS(args = dict(source = datasource), code = jscode_day)
+	slider_day = Slider(start = 1, end = 31, value = 1, step = 1, title = 'Day', format = "00")
+	slider_day.js_on_change('value', change_day)
+
+	#sliders = column(slider_year, slider_month, slider_day)
+	#layout = row(sliders, fig)
+	layout = column(fig, slider_year, slider_month, slider_day)
+
+	#grab the static resources
+	js_resources = INLINE.render_js()
+	css_resources = INLINE.render_css()
+
+	#get the resources from the figure components
+	script, div = components(layout)
+
+	return script, div, js_resources, css_resources
