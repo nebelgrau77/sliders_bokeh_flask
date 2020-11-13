@@ -7,11 +7,13 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, and_
 
-from bokeh_sliders import sliders_chart, better_sliders_chart
+from bokeh_sliders import sliders_chart, better_sliders_chart, birthday_sliders
 
 from dataframes import dataframe, assign_points, assign_cyl_points, dataframe_points
 from parameters import thresholds
 from helpers import explanation
+
+from birthday import birthdaycolor, makeimage
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -135,3 +137,15 @@ def bettersliders():
 							explanation=explanation)
 	
 	
+@app.route('/birthday_color')
+def birthday_color():
+	
+	bdate = (1,1,70) # Linux day zero :)
+
+	script, div, js_resources, css_resources = birthday_sliders(bdate)
+
+	return render_template('birthday.html', 
+							plot_script = script,
+							plot_div = div,
+							js_resources = js_resources,
+							css_resources=css_resources)

@@ -8,6 +8,8 @@ from helpers import get_color, score_calc, score_calc_sliders, js_formatter, js_
 from parameters import colors, weights, thresholds
 from jscode import jscode_master1, jscode_master2
 
+from birthday import scaler, birthdaycolor
+
 def sliders_chart(query):
 	'''make a simple square chart'''
 
@@ -158,3 +160,35 @@ def better_sliders_chart(query):
 	script, div = components(layout)
 
 	return script, div, js_resources, css_resources
+
+
+def birthday_sliders(birthdate):
+
+	#year, month, day = birthdate # birthdate is a tuple (YY,MM,DD)
+
+	x_range = (0,5)
+	y_range = (0,5)
+
+	coords = ([2],[2])
+	
+	birthdate = '770207'
+
+	color = birthdaycolor(birthdate) # function must be rewritten to accept a tuple of integers coming from the sliders.. unless I rewrite it in JS?
+
+	side = 4
+
+	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], color = [color], label = [label], side = [side]))
+
+	fig = figure(title=None, plot_width=280, plot_height=280,x_range = x_range, y_range = y_range, toolbar_location=None)
+	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)
+	fig.text(x='x', y='y', text=[label], text_font_style="bold", text_font_size = "48px", text_align='center', text_baseline="middle")
+
+	fig.outline_line_color = None
+	fig.grid.grid_line_color = None
+	fig.axis.axis_line_color = None
+	fig.axis.major_tick_line_color = None
+	fig.axis.minor_tick_line_color = None
+	fig.axis.major_label_text_color = None
+
+
+	pass
