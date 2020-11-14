@@ -154,15 +154,20 @@ jscode_bday = """
 	var green_string = Math.floor(green).toString(16).padStart(2, '0')
 	var blue_string = Math.floor(blue).toString(16).padStart(2, '0')
 
-	color[0] = "#" + red_string + green_string + blue_string
+	var new_color = "#" + red_string + green_string + blue_string
 
-	label[0] = year.toString(10).padStart(2, '0') 
+	color[0] = new_color
+
+	var new_label = 'Date: '
+				+ year.toString(10).padStart(2, '0') 
 				+ '/' 
 				+ month.toString(10).padStart(2, '0')
 				+ '/'
 				+ day.toString(10).padStart(2, '0')
-				+ '\\n' 
-				+ color[0]
+				+ '  Color: ' 
+				+ color[0].toUpperCase()
+
+	label[0] =  new_label
 
 	source.change.emit();
 """

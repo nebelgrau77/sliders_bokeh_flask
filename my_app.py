@@ -13,8 +13,6 @@ from dataframes import dataframe, assign_points, assign_cyl_points, dataframe_po
 from parameters import thresholds
 from helpers import explanation
 
-from birthday import birthdaycolor, makeimage
-
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = 'sqlite:///{}'.format(os.path.join(project_dir, 'data/cars.db'))

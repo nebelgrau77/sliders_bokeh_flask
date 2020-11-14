@@ -162,28 +162,23 @@ def birthday_sliders():
 	#year, month, day = birthdate # birthdate is a tuple (YY,MM,DD)
 
 	x_range = (0,4)
-	y_range = (0,4)
-
+	y_range = (0,4.5)
+	
 	coords = ([2],[2])
-	
-	bday_year = 70
-	bday_month = 1
-	bday_day = 1
-
-	
-
-	color = birthdaycolor('700101') # replace with a simple hex value, remove the calc function
-
 	side = 4
 
-	label = '70/01/01'
+	year,month,day = 70,1,1 # initial values
 
-	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], year = [bday_year], month = [bday_month], day = [bday_day], color = [color], label = [label], side = [side]))
+	color = '#b40000'
 
-	fig = figure(title=None, plot_width=400, plot_height=400,x_range = x_range, y_range = y_range, toolbar_location=None)
+	label = 'Date: 70/01/01  Color: #B40000'
+
+	datasource = ColumnDataSource(data = dict(x=coords[0], y=coords[1], year = [year], month = [month], day = [day], color = [color], label = [label], side = [side]))
+
+	fig = figure(title=None, plot_width=400, plot_height=450,x_range = x_range, y_range = y_range, toolbar_location=None)
 	fig.rect(x='x',y='y',width = 'side', height = 'side',fill_color = 'color', fill_alpha = 0.8, line_color = colors['white'], source = datasource)
-	fig.text(x='x', y='y', text='label', text_font_style="bold", text_font_size = "48px", text_align='center', text_baseline="middle", source = datasource)
-
+	fig.text(x='x', y=4, text='label', text_font_style="bold", text_font_size = "25px", text_align='center', text_baseline="bottom", source = datasource)
+	
 	fig.outline_line_color = None
 	fig.grid.grid_line_color = None
 	fig.axis.axis_line_color = None
@@ -194,7 +189,6 @@ def birthday_sliders():
 	jscode_year = jscode_bday.format(slidervalue='year')
 	jscode_month = jscode_bday.format(slidervalue='month')
 	jscode_day = jscode_bday.format(slidervalue='day')
-
 
 	change_year = CustomJS(args = dict(source = datasource), code = jscode_year)
 	slider_year = Slider(start = 0, end = 99, value = 70, step = 1, title = 'Year', format = "00")
@@ -208,8 +202,6 @@ def birthday_sliders():
 	slider_day = Slider(start = 1, end = 31, value = 1, step = 1, title = 'Day', format = "00")
 	slider_day.js_on_change('value', change_day)
 
-	#sliders = column(slider_year, slider_month, slider_day)
-	#layout = row(sliders, fig)
 	layout = column(fig, slider_year, slider_month, slider_day)
 
 	#grab the static resources
